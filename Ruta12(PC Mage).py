@@ -35,7 +35,7 @@ def agregarProducto():
 			for z in range(0, 16):
 				if(Local[x][y][z] == None):
 					Local[x][y][z] = producto
-					print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", palet ", z+1)
+					print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
 					espacioDisponible = True
 
 	if(espacioDisponible==False):
@@ -48,7 +48,7 @@ def buscarProducto():
 		for y in range(0, 2):
 			for z in range(0, 16):
 				if(Local[x][y][z]==producto):
-					print("El producto se encuentra en el pasillo ", x+1, ", estantería ", y+1, ", palet ", z+1)
+					print("El producto se encuentra en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
 					encontrado = True
 
 	if(encontrado==False):
