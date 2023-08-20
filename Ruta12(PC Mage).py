@@ -26,54 +26,43 @@ Local = [
 	["K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"]]
 ]
 
-
-def agregarProducto():
-	espacioDisponible = False
-	producto = str(input("Ingrese el producto que quiere guardar: "))
+def recorrerMatriz(par):
 	for x in range(0, 8):
 		for y in range(0, 2):
 			for z in range(0, 16):
-				if(Local[x][y][z] == None):
-					Local[x][y][z] = producto
-					print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
-					espacioDisponible = True
+				if(Local[x][y][z] == par):
+					return True, x , y, z
+				 
 
-	if(espacioDisponible==False):
+def agregarProducto():
+	resp, x, y, z = recorrerMatriz(None)
+	if resp == True:
+		producto = str(input("Ingrese el producto que quiere guardar: "))
+		Local[x][y][z] = producto
+		print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
+	else:
 		print("No hay espacios disponibles")
 
 def buscarProducto():
-	encontrado = False
 	producto = str(input("Ingrese el producto que quiere buscar: "))
-	for x in range(0, 8):
-		for y in range(0, 2):
-			for z in range(0, 16):
-				if(Local[x][y][z]==producto):
-					print("El producto se encuentra en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
-					encontrado = True
-
-	if(encontrado==False):
+	resp, x, y, z = recorrerMatriz(producto)
+	if resp == True:
+		print("El producto se encuentra en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
+	else:
 		print("El producto ingresado no se encuentra en el local")
 
-def egresarProducto():
-	encontrado = False
-	camion = 1
-	destino = "calamuchita"
+def egresarProducto(camion, destino):
 	producto = str(input("Ingrese el producto que quiere egresar: "))
-	for x in range(0, 8):
-		for y in range(0, 2):
-			for z in range(0, 16):
-				if(Local[x][y][z] == producto):
-					Local[x][y][z] = None
-					print("Se egresó con éxito el producto\nFue transportado en el camión ", camion, " y su destino es ", destino)
-					encontrado = True
-
-	if(encontrado==False):
+	resp, x, y, z = recorrerMatriz(producto)
+	if resp == True:
+		Local[x][y][z] = None
+		print("Se egresó con éxito el producto\nFue transportado en el camión ", camion, " y su destino es ", destino)
+		encontrado = True
+	else:
 		print("No existe el producto")
 				
-def verInforme():
-	
 
-opc = 1
+opc = int(1)
 while(opc==1):
 	opc2 = int(input("Que funcion quiere hacer\n1- Agregar un producto\n2- Buscar un producto\n3-Egresar un producto\n4-Ver informe\n: "))
 
