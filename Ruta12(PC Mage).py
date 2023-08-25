@@ -30,29 +30,29 @@ class Camion:
 			
 
 Local = [
-	[["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o"], 
-	["p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4"]],
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]],
 	
-	[["5", "6", "7", "8", "9", "10", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], 
-	["K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"]],
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]],
 
-	[["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o"], 
-	["p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4"]],
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]],
 
-	[["5", "6", "7", "8", "9", "10", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], 
-	["K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"]], 
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]], 
 
-	[["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o"], 
-	["p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4"]], 
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None],
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]], 
 
-	[["5", "6", "7", "8", "9", "10", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], 
-	["K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"]], 
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]], 
 
-	[["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o"], 
-	["p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4"]], 
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]], 
 
-	[["5", "6", "7", "8", "9", "10", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], 
-	["K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"]]
+	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
+	[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]]
 ]
 
 Destinos = ["París", "Tokio", "Río de Janeiro", "Nueva York", "Sydney", "Kioto", "Roma", "Estambul", "Vancouver", "Ciudad de México", "Dubái", "Venecia", "Moscú", "Chiang Mai", "Reykjavik", "Ciudad de Ho Chi Minh"]
@@ -62,20 +62,42 @@ Productos = ["Cepillo TurboMax para Mascotas", "Auriculares Sonido Cristalino", 
 Camiones = []
 
 cantPalets = 0
+vecesLleno = 0
+totalDespachados = 0
 
-def recorrerMatriz(par):
+def mostrarEstado():
+	print("[X] = Ocupado\n[0] = Vacio")
+	for x in range(len(Local)):
+		print("Pasillo ", x+1,":")
+		for y in Local[x]:
+			aux = "Estanteria:"
+			for z in y:
+				if z == None:
+					aux += "[0]"
+				else:
+					aux += "[X]"
+			print(aux)
+		print("\n")
+
+def buscarLugarVacio():
+	global vecesLleno
 	for x in range(0, 8):
 		for y in range(0, 2):
 			for z in range(0, 16):
-				if(Local[x][y][z] == par):
+				if(Local[x][y][z] == None):
 					return True, x , y, z
+	vecesLleno += 1
+	return False, 0, 0, 0
 
-def llenarMatrizAleatoriamente():
+def llenarMatrizAleatoriamente(lleno):
 	for x in range(0, 8):
 		for y in range(0, 2):
 			for z in range(0, 16):
-				a = random.randint(1, 4)
-				Local[x][y][z] = paletAleatorio(a)			
+				if lleno:
+					Local[x][y][z] = paletAleatorio(2)
+				else:
+					a = random.randint(1, 4)
+					Local[x][y][z] = paletAleatorio(a)		
 
 def paletAleatorio(num):
 	global cantPalets
@@ -91,15 +113,16 @@ def paletAleatorio(num):
 
 	return(None)
 		
-
 def agregarProducto():
-	resp, x, y, z = recorrerMatriz(None)
+	resp, x, y, z = buscarLugarVacio()
 	if resp == True:
+		global cantPalets
 		nom = str(input("Ingrese el nombre del producto que quiere guardar: "))
-		cod = str(input("Ingrese el codigo del producto que quiere guardar: "))
+		cantPalets += 1
+		cod = cantPalets
 		producto = Palet(cod, nom)
 		Local[x][y][z] = producto
-		print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
+		print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1 , "el codigo es:", cod)
 	else:
 		print("No hay espacios disponibles")
 
@@ -120,6 +143,7 @@ def buscarProducto():
 def despacharProducto():
 
 	def despacharAuto():
+		global totalDespachados
 		for i in range(len(Camiones)):
 			direccion = devolverMayorCantDire(0)
 			camion = Camiones[i]
@@ -132,13 +156,15 @@ def despacharProducto():
 							if puntero.destino == direccion:
 								camion.agregarPalet(puntero.nombre)
 								Local[x][y][z] = None
+								totalDespachados += 1
 			
 			print("Los siguientes productos fueron despachados: ")
 			camion.mostrarTrailer()
 			print("Seran transportados en el camión ", camion.nombre, " y su destino es ", camion.destino)
+			camion.trailer = []
 
 	def despacharManual():
-
+		global totalDespachados
 		nomCodProducto = str(input("Ingrese el nombre o codigo del producto que quiere egresar: "))
 		opcCamion = int(input("Seleccione un camion disponible para llevar el envio:"))
 		camionSel = Camiones[opcCamion-1]
@@ -150,11 +176,13 @@ def despacharProducto():
 					puntero = Local[x][y][z]
 					if puntero != None: 
 						if(puntero.nombre == nomCodProducto or puntero.codigo == nomCodProducto):
-							Local[x][y][z] = None
+							
 							if puntero.destino == "":
 								print("El producto elegido no cuenta con direccion de destino")
 								puntero.destino = str(input("ingrese destino: "))
 
+							Local[x][y][z] = None
+							totalDespachados += 1
 							camionSel.destino = puntero.destino
 							print("Se despacho el producto del pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
 							print("Se egresó con éxito el producto\nFue transportado en el camión ", camionSel.nombre, " y su destino es ", camionSel.destino)
@@ -166,8 +194,12 @@ def despacharProducto():
 		else:
 			print("No existe el producto")
 	
-	despacharAuto()
-	despacharManual()
+	opc = int(input("Que desea hacer: \n1-Despachar automaticamente (Agrupara los palets por destinaciones y despachara la mayor cantidad posible usando un camion, utilizara todos los camiones)\n2-Despachar manualmente\n- "))
+	match opc:
+		case 1:
+			despacharAuto()
+		case 2:
+			despacharManual()
 
 def mostrarCamiones():
 	for x in Camiones:
@@ -209,8 +241,14 @@ def devolverMayorCantDire(puesto):
 	sorter()
 	return arrDirecciones[puesto] 			
 
+def mostrarInforme():
+	print("Cantidad de veces que se lleno el almacen:")
+	print(vecesLleno)
+	print("Cantidad de palets ingresados al almacen en total:")
+	print(cantPalets)
+	print("Cantidad de palets despachados del almacen en total:")
+	print(totalDespachados)
 
-opc = 1
 
 cam1 = Camion("Camion de Javi")
 cam2 = Camion("Camion de Pepe")
@@ -220,26 +258,26 @@ Camiones.append(cam1)
 Camiones.append(cam2)
 Camiones.append(cam3)
 
-resp = str(input("Quiere llenar el almacen aleatoriamente? (y/n)"))
-if resp == "y":
-	llenarMatrizAleatoriamente()
+resp = str(input("Quiere llenar el almacen aleatoriamente?('a' Creara cierta cantidad de palets y los pondra en lugares aleatorios, 'll' llenara el almacen entero de palets aleatorios, solo para testeo) [ll/a/n]"))
+if resp == "ll":
+	llenarMatrizAleatoriamente(True)
+if resp == "a":
+	llenarMatrizAleatoriamente(False)
 
 while(True):
-	opc2 = int(input("Que funcion quiere hacer\n1- Agregar un producto\n2- Buscar un producto\n3-Despachar un producto\n4-Ver informe\n5-Salir\n- "))
-
-	if(opc2==1):
-		agregarProducto()
-
-	elif(opc2==2):
-		buscarProducto()
-
-	elif(opc2==3):
-		despacharProducto()
-
-	elif(opc2==4):
-		print("En construccion")
-
-	elif(opc == 5):
-		break
+	opc2 = int(input("Que funcion quiere hacer\n1- Agregar un producto\n2- Buscar un producto\n3-Despachar un producto\n4-Ver informe\n5-Mostrar estado del almacen\n6-Salir\n- "))
+	match opc2:
+		case 1:
+			agregarProducto()
+		case 2:
+			buscarProducto()
+		case 3:
+			despacharProducto()
+		case 4:
+			mostrarInforme()
+		case 5:
+			mostrarEstado()
+		case 6:
+			break
 
 os.system("pause")
