@@ -1,5 +1,7 @@
 import os
 import random
+from datetime import date
+
 class Palet:
 	def __init__(self, cod, nom):
 		self.codigo = cod
@@ -28,6 +30,21 @@ class Camion:
 			aux += x + ", "
 		print(aux)
 			
+class Informe:
+	def __init__(self, tipo, destino, ubicacion, nombre):
+		self.tipo = str(tipo)
+		self.nombre = str(nombre)
+		self.fecha = date.today()
+		self.destino = str(destino)
+		self.ubicacion = ubicacion
+	
+	def toString(self):
+		aux = self.tipo +"\n"+ str(self.fecha)+"\n"
+		if self.tipo == "Despacho":
+			aux += "Se despacho un "+ self.nombre + " con destino a " + self.destino +"\n"
+		else:
+			aux += "Se deposito un " + str(self.nombre) + " en el pasillo " + str(self.ubicacion[0]+1) + ", estanteria " + str(self.ubicacion[1]+1) + ", posicion "+ str(self.ubicacion[2]+1)+"\n"
+		print(aux)
 
 Local = [
 	[[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], 
@@ -60,6 +77,8 @@ Destinos = ["París", "Tokio", "Río de Janeiro", "Nueva York", "Sydney", "Kioto
 Productos = ["Cepillo TurboMax para Mascotas", "Auriculares Sonido Cristalino", "Silla Ergonómica UltraComfort", "Cámara Instantánea SnapShot", "Tablet NovaPad 10X", "Robot Asistente Doméstico RoboHelp", "Juego de Ollas MasterChef", "Bicicleta Eléctrica EcoRide", "Pulsera Fitness PulseTrack", "Limpiador Automático SmartClean", "Termo Aislante HeatWave", "Batidora de Alta Velocidad TurboBlend", "Monitor Curvo CrystalView", "Videojuego Galactic Quest"]
 
 Camiones = []
+
+Informes = []
 
 cantPalets = 0
 vecesLleno = 0
@@ -95,9 +114,14 @@ def llenarMatrizAleatoriamente(lleno):
 			for z in range(0, 16):
 				if lleno:
 					Local[x][y][z] = paletAleatorio(2)
+					p = Local[x][y][z]
+					Informes.append(Informe("Ingreso", None, [x,y,z], p.nombre))
 				else:
 					a = random.randint(1, 4)
-					Local[x][y][z] = paletAleatorio(a)		
+					Local[x][y][z] = paletAleatorio(a)
+					p = Local[x][y][z]
+					if p != None:
+						Informes.append(Informe("Ingreso", None, [x,y,z], p.nombre))
 
 def paletAleatorio(num):
 	global cantPalets
@@ -122,6 +146,9 @@ def agregarProducto():
 		cod = cantPalets
 		producto = Palet(cod, nom)
 		Local[x][y][z] = producto
+		
+		Informes.append(Informe("Ingreso", None, [x,y,z], nom))
+
 		print("Se guardo el producto en el pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1 , "el codigo es:", cod)
 	else:
 		print("No hay espacios disponibles")
@@ -157,10 +184,11 @@ def despacharProducto():
 								camion.agregarPalet(puntero.nombre)
 								Local[x][y][z] = None
 								totalDespachados += 1
+								Informes.append(Informe("Despacho", puntero.destino, None, puntero.nombre))
 			
 			print("Los siguientes productos fueron despachados: ")
 			camion.mostrarTrailer()
-			print("Seran transportados en el camión ", camion.nombre, " y su destino es ", camion.destino)
+			print("Seran transportados en el camión ", camion.nombre, " y su destino es ", camion.destino , "\n")
 			camion.trailer = []
 
 	def despacharManual():
@@ -184,6 +212,9 @@ def despacharProducto():
 							Local[x][y][z] = None
 							totalDespachados += 1
 							camionSel.destino = puntero.destino
+
+							Informes.append(Informe("Despacho", puntero.destino, None, puntero.nombre))
+
 							print("Se despacho el producto del pasillo ", x+1, ", estantería ", y+1, ", pallet ", z+1)
 							print("Se egresó con éxito el producto\nFue transportado en el camión ", camionSel.nombre, " y su destino es ", camionSel.destino)
 							print("El camion contiene los siguientes productos:")
@@ -195,11 +226,13 @@ def despacharProducto():
 			print("No existe el producto")
 	
 	opc = int(input("Que desea hacer: \n1-Despachar automaticamente (Agrupara los palets por destinaciones y despachara la mayor cantidad posible usando un camion, utilizara todos los camiones)\n2-Despachar manualmente\n- "))
+	os.system("cls")
 	match opc:
 		case 1:
 			despacharAuto()
 		case 2:
 			despacharManual()
+	
 
 def mostrarCamiones():
 	for x in Camiones:
@@ -248,6 +281,9 @@ def mostrarInforme():
 	print(cantPalets)
 	print("Cantidad de palets despachados del almacen en total:")
 	print(totalDespachados)
+	print("\n### Informes ###\n")
+	for x in Informes:
+		x.toString()
 
 
 cam1 = Camion("Camion de Javi")
@@ -265,7 +301,9 @@ if resp == "a":
 	llenarMatrizAleatoriamente(False)
 
 while(True):
-	opc2 = int(input("Que funcion quiere hacer\n1- Agregar un producto\n2- Buscar un producto\n3-Despachar un producto\n4-Ver informe\n5-Mostrar estado del almacen\n6-Salir\n- "))
+	os.system("cls")
+	opc2 = int(input("Que funcion quiere hacer\n1-Agregar un producto\n2-Buscar un producto\n3-Despachar un producto\n4-Ver informe\n5-Mostrar estado del almacen\n6-Salir\n- "))
+	os.system("cls")
 	match opc2:
 		case 1:
 			agregarProducto()
@@ -279,5 +317,5 @@ while(True):
 			mostrarEstado()
 		case 6:
 			break
-
+	input("Toque cualquier tecla para continuar")
 os.system("pause")
